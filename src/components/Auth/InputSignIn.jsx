@@ -45,7 +45,10 @@ const InputSignIn = () => {
                   navigate("/dashboard/parent");
                 } else if (userRole === "school" || userRole === "teacher") {
                   navigate("/dashboard/school");
-                } else if (userRole === "healthcare") {
+                } else if (
+                  userRole === "healthcare" ||
+                  userRole == "staff-puskesmas"
+                ) {
                   navigate("/dashboard/health-care");
                 } else {
                   navigate("/landing-page");

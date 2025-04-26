@@ -101,4 +101,5 @@ input:-webkit-autofill:hover {
 
 * {
   scroll-behavior: smooth;
+  box-sizing: border-box;
 }
