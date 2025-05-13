@@ -4,6 +4,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { LayoutDashboard } from "lucide-react";
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { RiMentalHealthLine } from "react-icons/ri";
 
 export default function HealthCareLayout() {
   const location = useLocation();
@@ -42,6 +43,12 @@ export default function HealthCareLayout() {
         icon: LayoutDashboard,
         isActive: location.pathname === "/dashboard/health-care",
       },
+      {
+        title: "Intervensi",
+        url: "/dashboard/health-care/intervention",
+        icon: RiMentalHealthLine,
+        isActive: location.pathname === "/dashboard/health-care/intervention",
+      },
     ],
   };
 
@@ -51,7 +58,7 @@ export default function HealthCareLayout() {
         <SiteHeader onClick={data.user.onClick} data={data} />
         <div className="flex flex-1">
           <AppSidebar data={data} />
-          <SidebarInset className="bg-[#f0f4fa] overflow-scroll">
+          <SidebarInset className="bg-[#f0f4fa] overflow-scroll p-6">
             <Outlet />
           </SidebarInset>
         </div>

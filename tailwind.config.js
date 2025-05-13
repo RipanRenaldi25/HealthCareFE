@@ -16,6 +16,7 @@ export default withMT({
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        blue_primary: "#1b82e6",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {

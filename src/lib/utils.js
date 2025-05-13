@@ -52,3 +52,44 @@ export const formatBirthDate = (date) => {
   }
   return new Date(date).toISOString().split("T")[0];
 };
+
+export const getDateDifference = (dateInput) => {
+  const date = +new Date(dateInput);
+  const diff = +new Date() - date;
+
+  const seconds = Math.floor(diff / 1000);
+
+  const minutes = 60;
+  const hours = 60 * minutes;
+  const days = 24 * hours;
+  const weeks = 7 * days;
+  const months = 30 * days;
+  const years = 12 * months;
+
+  if (seconds < minutes) {
+    return `${seconds} seconds ago`;
+  } else if (seconds < hours) {
+    const minute = Math.floor(seconds / minutes);
+    return `${minute} minutes ago`;
+  } else if (seconds < days) {
+    const hour = Math.floor(seconds / hours);
+    return `${hour} hours ago`;
+  } else if (seconds < months) {
+    const day = Math.floor(seconds / days);
+    return `${day} days ago`;
+  } else if (seconds < years) {
+    const month = Math.floor(seconds / months);
+    return `${month} months ago`;
+  }
+  const year = Math.floor(seconds / years);
+  return `${year} years ago`;
+};
+
+export const getDate = (date) => {
+  const dateFormat = Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    year: "numeric",
+    month: "2-digit",
+  });
+  return dateFormat.format(new Date(date));
+};

@@ -30,6 +30,7 @@ import { ParentHomePage as HomeParent } from "./pages/Dashboard/Parent/HomeParen
 import { SelfProfilePage } from "./pages/Dashboard/Parent/SelfProfilePage";
 import { MembersPage } from "./pages/Dashboard/Parent/Member/MembersPage";
 import { ProfileFormPage } from "./pages/Dashboard/Parent/FamilyFormPage/ProfileFormPage";
+import InterventionPage from "./pages/Dashboard/HealthCare/InterventionPage";
 
 function App() {
   const location = useLocation();
@@ -88,6 +89,7 @@ function App() {
 
           <Route path="/dashboard/health-care" element={<HealthCareLayout />}>
             <Route index element={<HomeHealthCare />} />
+            <Route path="intervention" element={<InterventionPage />} />
           </Route>
 
           <Route path="/auth" element={<AuthLayout />}>

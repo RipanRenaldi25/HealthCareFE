@@ -27,6 +27,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { BarChartRequest } from "@/components/Dashboard/Healthcare/Cart/BarCart";
+import HealthBlog from "@/components/Dashboard/Healthcare/Blog/HealthBlog";
+import { getDateDifference } from "@/lib/utils";
 const chartData = [
   { month: "January", normal: 186, risk: 80, fat: 11 },
   { month: "February", normal: 237, risk: 120, fat: 33 },
@@ -76,34 +78,37 @@ const HomeHealthCare = () => {
     },
   ];
   return (
-    <article className="p-6 flex flex-col gap-4">
+    <article className="flex flex-col gap-4">
       <HealthCareCardList healthCareCards={healthCareCards} />
       <div className="grid grid-cols-5 gap-4">
         <section className="col-span-3 flex flex-col gap-4">
           <div className="bg-white p-4 rounded-lg col-span-2">
             <header className="flex justify-between items-center">
               <h1 className="font-semibold text-lg">Request need to be done</h1>
-              <NavLink to="" className="font-bold text-light-blue-600">
+              <NavLink
+                to="intervention"
+                className="font-bold text-light-blue-600"
+              >
                 View All
               </NavLink>
             </header>
-            <Table>
+            <Table className="table-fixed">
               <TableCaption>List of request</TableCaption>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-[100px]">Sekolah</TableHead>
-                  <TableHead>Siswa</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead className="text-right">Tanggal</TableHead>
+                  <TableHead className="w-[30%]">Sekolah</TableHead>
+                  <TableHead className="w-[30%]">Siswa</TableHead>
+                  <TableHead className="w-[10%]">Status</TableHead>
+                  <TableHead className="text-right w-[30%]">Tanggal</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 <TableRow>
                   <TableCell className="font-medium">SD Cibiru Hilir</TableCell>
-                  <TableCell>Ripan Renaldi</TableCell>
+                  <TableCell>Resa Natalia Si Paling Cantik Di Dunia </TableCell>
                   <TableCell>Pending</TableCell>
                   <TableCell className="text-right">
-                    {Intl.DateTimeFormat("id-ID", {}).format(new Date())}
+                    {getDateDifference("2025/05/09")}
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -111,7 +116,7 @@ const HomeHealthCare = () => {
                   <TableCell>Ripan Renaldi</TableCell>
                   <TableCell>Pending</TableCell>
                   <TableCell className="text-right">
-                    {Intl.DateTimeFormat("id-ID", {}).format(new Date())}
+                    {getDateDifference("2025/05/09")}
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -119,7 +124,7 @@ const HomeHealthCare = () => {
                   <TableCell>Ripan Renaldi</TableCell>
                   <TableCell>Pending</TableCell>
                   <TableCell className="text-right">
-                    {Intl.DateTimeFormat("id-ID", {}).format(new Date())}
+                    {getDateDifference("2025/05/09")}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -196,7 +201,10 @@ const HomeHealthCare = () => {
           </div>
 
           <div>
-            <BarChartRequest />
+            {/* <BarChartRequest /> */}
+            <Card>
+              <HealthBlog />
+            </Card>
           </div>
         </section>
       </div>
