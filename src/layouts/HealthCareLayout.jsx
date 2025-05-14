@@ -45,7 +45,7 @@ export default function HealthCareLayout() {
       },
       {
         title: "Intervensi",
-        url: "/dashboard/health-care/intervention",
+        url: "/dashboard/health-care/intervention?page=1",
         icon: RiMentalHealthLine,
         isActive: location.pathname === "/dashboard/health-care/intervention",
       },

@@ -314,6 +314,7 @@ export const getMembersBelongToUser = async () => {
         Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
       },
     });
+    console.log({ response });
 
     return response.data;
   } catch (err) {
@@ -370,6 +371,7 @@ export const reponseQuisioner = async (quisionerId, payload) => {
     );
     return response.data;
   } catch (err) {
+    console.log({ err });
     toast.error(err.response?.data.message || err.message);
   }
 };

@@ -105,7 +105,7 @@ const HomeHealthCare = () => {
               <TableBody>
                 <TableRow>
                   <TableCell className="font-medium">SD Cibiru Hilir</TableCell>
-                  <TableCell>Resa Natalia Si Paling Cantik Di Dunia </TableCell>
+                  <TableCell>Ripan Renaldi</TableCell>
                   <TableCell>Pending</TableCell>
                   <TableCell className="text-right">
                     {getDateDifference("2025/05/09")}

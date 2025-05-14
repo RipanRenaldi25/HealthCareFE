@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 export const ResponseQuisionerPage = () => {
   const navigate = useNavigate();
   const [quisioners, setQuisioners] = useState();
-  const {userBooleanResponses} = quisionerStore();
+  const { userBooleanResponses } = quisionerStore();
   const { id } = useParams();
   useEffect(() => {
     const fetchQuisioner = async () => {
@@ -20,24 +20,23 @@ export const ResponseQuisionerPage = () => {
   }, []);
 
   const handleSubmit = async (type = "") => {
-    if(type === "MULTIPLE_CHOICE" || type === "SCALE") {
-      console.log({userBooleanResponses})
+    if (type === "MULTIPLE_CHOICE" || type === "SCALE") {
+      console.log({ userBooleanResponses });
       console.log("Submit from multiple choice and scale");
       const { data } = await reponseQuisioner(id, userBooleanResponses);
 
       toast.success(`${data.message ?? "Data Berhasil Disimpan"}`, {
         onClose: () => {
-            navigate('/dashboard/parent')
+          navigate("/dashboard/parent");
         },
-        autoClose: 1500
-    })
+        autoClose: 1500,
+      });
     }
-  }
-  console.log({ quisioners });
+  };
   return (
     <article className="p-4 relative h-full">
       {/* <QuestionList questions={quisioners?.questions ?? []} /> */}
-      <QuestionList {...quisioners} onSubmit={handleSubmit}/>
+      <QuestionList {...quisioners} onSubmit={handleSubmit} />
     </article>
   );
 };

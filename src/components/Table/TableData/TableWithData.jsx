@@ -23,7 +23,6 @@ export const TableWithData = ({ columns = [], data = [], count = 0 }) => {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
   });
   const [searchParams, setSearchParams] = useSearchParams();
   const totalPage = Math.ceil(count / 10);

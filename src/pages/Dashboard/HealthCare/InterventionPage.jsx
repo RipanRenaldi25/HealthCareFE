@@ -7,6 +7,7 @@ import { DatePicker } from "@/components/Input/DatePicker";
 import { useEffect, useState } from "react";
 import { SelectInput } from "@/components/Input/SelectInput";
 import { useSearchParams } from "react-router-dom";
+import { useDebounce } from "@/hooks/useDebounce";
 
 const dummyData = [
   {
@@ -256,13 +257,13 @@ const InterventionPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [dateInput, setDateInput] = useState(null);
   const show = +searchParams.get("show");
+  const currentIndex = +searchParams.get("page");
+  const firstIndex = currentIndex * show - show;
+  const lastIndex = firstIndex + show;
 
   useEffect(() => {
     const fetch = async () => {
       const test = await new Promise((resolve, rejected) => {
-        const currentIndex = +searchParams.get("page");
-        const firstIndex = currentIndex * show - show;
-        const lastIndex = firstIndex + show;
         resolve(dummyData.slice(firstIndex, lastIndex));
       });
       setData(test);
@@ -270,6 +271,14 @@ const InterventionPage = () => {
     fetch();
   }, [searchParams.get("page")]);
 
+  useEffect(() => {
+    console.log({ firstIndex, lastIndex });
+    const data = dummyData.slice(firstIndex, lastIndex);
+    setData(data);
+  }, [searchParams.get("show")]);
+
+  const [query, setQuery] = useState("");
+  const debounceSearchInput = useDebounce(query);
   return (
     <article>
       <section className="bg-white p-4 rounded-lg flex flex-col gap-2">
@@ -280,7 +289,8 @@ const InterventionPage = () => {
               <Input
                 type="text"
                 placeholder="Search school or id"
-                className="placeholder:px-4"
+                className="px-8"
+                onChange={(e) => setQuery(e.target.value)}
               />
             </div>
             <div>

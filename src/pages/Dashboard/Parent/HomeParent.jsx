@@ -21,7 +21,7 @@ export const ParentHomePage = () => {
   const [parentQuisioner, setParentQuisioner] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [userResponse, setUserResponse] = useState(null);
-  const [memberLogin, setMemberLogin] = useState(null);
+  const [memberLogin, setMemberLogin] = useState([]);
   const { userLogin } = userStore();
 
   const [progressItems, setProgressItems] = useState([
@@ -50,6 +50,7 @@ export const ParentHomePage = () => {
   useEffect(() => {
     const fetchMemberWhooseLogin = async () => {
       const { data } = await getMembersBelongToUser();
+      console.log({ dataLogin: data });
       setMemberLogin(data);
     };
     fetchMemberWhooseLogin();
@@ -58,32 +59,33 @@ export const ParentHomePage = () => {
   useEffect(() => {
     async function fetchFamilyMembersData() {
       const { data } = await getFamilyMembers();
-      useFamilyFormStore.setState((prevValue) => ({
-        ...prevValue,
-        formInput: {
-          profile: {
-            education: data[0].education.toLowerCase(),
-            fullName: data[0].full_name,
-            phoneNumber: data[0].phone_number,
-            gender: data[0].gender,
-            relation: data[0].relation,
+      if (data.length) {
+        useFamilyFormStore.setState((prevValue) => ({
+          ...prevValue,
+          formInput: {
+            profile: {
+              education: data[0].education.toLowerCase(),
+              fullName: data[0].full_name,
+              phoneNumber: data[0].phone_number,
+              gender: data[0].gender,
+              relation: data[0].relation,
+            },
+            nutrition: {
+              ...data[0].nutrition[0],
+            },
+            job: {
+              jobTypeId: data[0].job.job_type.id,
+              income: data[0].job.income,
+            },
+            residence: {
+              status: data[0].residence.status,
+              address: data[0].residence.address,
+              description: data[0].residence.description,
+            },
           },
-          nutrition: {
-            ...data[0].nutrition[0],
-          },
-          job: {
-            jobTypeId: data[0].job.job_type.id,
-            income: data[0].job.income,
-          },
-          residence: {
-            status: data[0].residence.status,
-            address: data[0].residence.address,
-            description: data[0].residence.description,
-          },
-        },
-        selfBirthDate: formatBirthDate(data[0].birth_date),
-      }));
-      console.log({ data });
+          selfBirthDate: formatBirthDate(data[0].birth_date),
+        }));
+      }
       setFamilyMembers(data);
     }
 
@@ -125,12 +127,10 @@ export const ParentHomePage = () => {
             totalQuestion = quisioner.questions?.length ?? 0;
             url = `quisioners/${quisioner.id}/response?q=1&type=SCALE`;
           }
-          if (!!memberLogin && !!quisioner) {
-            console.log({ memberLogin, quisioner });
+          if (memberLogin?.length && !!quisioner) {
             const answeredQuisioner = quisioner.response.find(
               (res) => res.family_member_id === memberLogin[0].id
             );
-            console.log({ answeredQuisioner });
             progress = answeredQuisioner
               ? Math.ceil(
                   (answeredQuisioner.answers.length / totalQuestion) * 100
