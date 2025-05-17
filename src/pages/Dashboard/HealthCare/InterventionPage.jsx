@@ -10,7 +10,7 @@ import { getDate } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { GrClearOption } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { FaWeightScale } from "react-icons/fa6";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { IoIosMale, IoMdMale } from "react-icons/io";
@@ -321,6 +321,12 @@ const InterventionPage = () => {
     console.log({ row });
   };
 
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+    navigate("1/recommendation");
+  };
+
   const format = {
     headers: [
       {
@@ -445,7 +451,7 @@ const InterventionPage = () => {
           </section>
         </header>
         <TableWithData
-          columns={tableColumns({ handleShow })}
+          columns={tableColumns({ handleShow, handleEdit })}
           data={data}
           count={dummyData.length}
         />

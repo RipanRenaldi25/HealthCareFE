@@ -31,6 +31,7 @@ import { SelfProfilePage } from "./pages/Dashboard/Parent/SelfProfilePage";
 import { MembersPage } from "./pages/Dashboard/Parent/Member/MembersPage";
 import { ProfileFormPage } from "./pages/Dashboard/Parent/FamilyFormPage/ProfileFormPage";
 import InterventionPage from "./pages/Dashboard/HealthCare/InterventionPage";
+import RecommendationPage from "./pages/Dashboard/HealthCare/RecommendationPage";
 
 function App() {
   const location = useLocation();
@@ -90,6 +91,10 @@ function App() {
           <Route path="/dashboard/health-care" element={<HealthCareLayout />}>
             <Route index element={<HomeHealthCare />} />
             <Route path="intervention" element={<InterventionPage />} />
+            <Route
+              path="intervention/:id/recommendation"
+              element={<RecommendationPage />}
+            />
           </Route>
 
           <Route path="/auth" element={<AuthLayout />}>

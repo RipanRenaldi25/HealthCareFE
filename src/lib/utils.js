@@ -93,3 +93,12 @@ export const getDate = (date) => {
   });
   return dateFormat.format(new Date(date));
 };
+
+export const getCurrentDate = () => {
+  const dateFormat = Intl.DateTimeFormat("id-ID", {
+    day: "2-digit",
+    year: "numeric",
+    month: "2-digit",
+  });
+  return dateFormat.format(new Date());
+};
