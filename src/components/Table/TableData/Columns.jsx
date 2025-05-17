@@ -2,7 +2,10 @@ import { Button } from "@/components/ui/button";
 import { GiMagnifyingGlass } from "react-icons/gi";
 import { FaPencil } from "react-icons/fa6";
 
-export const tableColumns = [
+export const tableColumns = ({
+  handleEdit = () => null,
+  handleShow = () => null,
+}) => [
   {
     header: "No",
     cell: (table) => <p>{table.row.index + 1}</p>,
@@ -14,6 +17,10 @@ export const tableColumns = [
   {
     accessorKey: "teacher",
     header: () => <div className="text-center">Guru</div>,
+  },
+  {
+    accessorKey: "student",
+    header: () => <div className="text-center">Siswa</div>,
   },
   {
     accessorKey: "status",
@@ -33,10 +40,10 @@ export const tableColumns = [
     cell: ({ row }) => {
       return (
         <div className="flex gap-5 justify-center">
-          <button>
+          <button onClick={() => handleShow(row.original)}>
             <GiMagnifyingGlass className="size-[18px] text-blue-600" />
           </button>
-          <button>
+          <button onClick={() => handleEdit(row.original)}>
             <FaPencil className="size-[18px] text-green-600" />
           </button>
         </div>

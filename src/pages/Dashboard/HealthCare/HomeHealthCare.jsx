@@ -131,7 +131,7 @@ const HomeHealthCare = () => {
             </Table>
           </div>
           <div>
-            <BarChartRequest />
+            <BarChartRequest title="Permintaan 7 hari sebelumnya" />
           </div>
         </section>
 

@@ -16,7 +16,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
 
 export const TableWithData = ({ columns = [], data = [], count = 0 }) => {
   const table = useReactTable({
@@ -32,13 +31,13 @@ export const TableWithData = ({ columns = [], data = [], count = 0 }) => {
 
   return (
     <div className="rounded-md border">
-      <Table>
+      <Table className="table-auto">
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id}>
+                  <TableHead key={header.id} className="bg text-center">
                     {header.isPlaceholder
                       ? null
                       : flexRender(

@@ -17,7 +17,8 @@ export const BasicTable = ({
   children,
 }) => {
   return (
-    <div className="w-full bg-white mt-6 rounded-xl p-4">
+    // <div className="w-full bg-white mt-6 rounded-xl p-4">
+    <div className="w-full bg-white rounded-xl ">
       <h1 className="mb-2">{title}</h1>
       <Table>
         <TableCaption>{caption}</TableCaption>
