@@ -103,3 +103,7 @@ input:-webkit-autofill:hover {
   scroll-behavior: smooth;
   box-sizing: border-box;
 }
+
+ol {
+  @apply list-decimal ml-4;
+}
