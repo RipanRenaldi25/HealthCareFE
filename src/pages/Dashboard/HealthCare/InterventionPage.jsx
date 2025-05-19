@@ -6,7 +6,7 @@ import { TableWithData } from "@/components/Table/TableData/TableWithData";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/useDebounce";
-import { getDate } from "@/lib/utils";
+import { getCurrentDate, getDate } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { GrClearOption } from "react-icons/gr";
 import { IoSearchOutline } from "react-icons/io5";
@@ -259,15 +259,15 @@ import { getRequestsByHealthCare } from "@/lib/API/Puskesmas/puskesmasApi";
 //   },
 // ];
 
-const dummyData = Array.from({ length: 33 }).map((_, index) => ({
-  id: index + 1,
-  status: "pending",
-  teacher: "Ripan Renaldi",
-  school_name: "SDN 7 asdasdsadasd",
-  created_at: getDate("2025/05/09"),
-  email: "ripanrenaldi25@gmail.com",
-  student: `Siswa ${index + 1} renaldli abcs rada panjang`,
-}));
+// const dummyData = Array.from({ length: 33 }).map((_, index) => ({
+//   id: index + 1,
+//   status: "pending",
+//   teacher: "Ripan Renaldi",
+//   school_name: "SDN 7 asdasdsadasd",
+//   created_at: getDate("2025/05/09"),
+//   email: "ripanrenaldi25@gmail.com",
+//   student: `Siswa ${index + 1} renaldli abcs rada panjang`,
+// }));
 
 const InterventionPage = () => {
   const [data, setData] = useState([]);
@@ -292,25 +292,26 @@ const InterventionPage = () => {
   const firstIndex = currentIndex * show - show;
   const lastIndex = firstIndex + show;
   const [open, setOpen] = useState(false);
+  const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    const fetch = async () => {
-      const test = await new Promise((resolve, rejected) => {
-        resolve(dummyData.slice(firstIndex, lastIndex));
-      });
-      setData(test);
-    };
-    fetch();
-  }, [searchParams.get("page")]);
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     const test = await new Promise((resolve, rejected) => {
+  //       resolve(dummyData.slice(firstIndex, lastIndex));
+  //     });
+  //     setData(test);
+  //   };
+  //   fetch();
+  // }, [searchParams.get("page")]);
 
-  useEffect(() => {
-    console.log({ firstIndex, lastIndex });
-    const data = dummyData.slice(firstIndex, lastIndex);
-    setData(data);
-  }, [searchParams.get("show")]);
+  // useEffect(() => {
+  //   console.log({ firstIndex, lastIndex });
+  //   const data = dummyData.slice(firstIndex, lastIndex);
+  //   setData(data);
+  // }, [searchParams.get("show")]);
 
   const [query, setQuery] = useState("");
-  const debounceSearchInput = useDebounce(query);
+  const debounceSearchInput = useDebounce(query, 300);
 
   const clearAllInput = () => {
     setQuery("");
@@ -338,6 +339,30 @@ const InterventionPage = () => {
       { alias: "Skor", name: "score" },
     ],
   };
+
+  useEffect(() => {
+    const fetchRequestByHealthCare = async () => {
+      const response = await getRequestsByHealthCare();
+      setData(response.data);
+    };
+    fetchRequestByHealthCare();
+  }, []);
+
+  useEffect(() => {
+    const fetchRequestByHealthCare = async () => {
+      const response = await getRequestsByHealthCare({
+        nis: debounceSearchInput,
+        startDate: dateInput,
+        show,
+        page: currentIndex,
+      });
+      console.log({ response });
+      setData(response.data);
+      setCount(response.total);
+    };
+    fetchRequestByHealthCare();
+    console.log("re rendered");
+  }, [debounceSearchInput, dateInput, currentIndex, show]);
 
   return (
     <article>
@@ -427,7 +452,7 @@ const InterventionPage = () => {
               <IoSearchOutline className="absolute size-6 top-1/2 -translate-y-1/2 left-1 opacity-50" />
               <Input
                 type="text"
-                placeholder="Search school or id"
+                placeholder="Search student by nis"
                 className="px-8"
                 onChange={(e) => setQuery(e.target.value)}
                 value={query}
@@ -454,7 +479,7 @@ const InterventionPage = () => {
         <TableWithData
           columns={tableColumns({ handleShow, handleEdit })}
           data={data}
-          count={dummyData.length}
+          count={count}
         />
       </section>
     </article>

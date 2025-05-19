@@ -33,7 +33,7 @@ export const SelectInput = ({ selectItems = [], title = "Select Title" }) => {
         <SelectGroup>
           <SelectLabel>{title}</SelectLabel>
           {selectItems.map((selectItem) => (
-            <SelectItem value={selectItem.value}>
+            <SelectItem value={selectItem.value} key={selectItem.value}>
               {selectItem.content}
             </SelectItem>
           ))}
