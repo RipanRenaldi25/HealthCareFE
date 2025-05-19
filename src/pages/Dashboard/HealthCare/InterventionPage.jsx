@@ -17,6 +17,7 @@ import { IoIosMale, IoMdMale } from "react-icons/io";
 import { Progress } from "@/components/ui/progress";
 import { BasicTable } from "@/components/Table/BasicTable";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { getRequestsByHealthCare } from "@/lib/API/Puskesmas/puskesmasApi";
 
 // {
 //   id: "1",

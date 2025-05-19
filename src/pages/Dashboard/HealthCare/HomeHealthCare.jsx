@@ -1,5 +1,5 @@
 import { HealthCareCardList } from "@/components/Dashboard/Healthcare/HealthCareCardList";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaBriefcaseMedical } from "react-icons/fa";
 import {
   Table,
@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { NavLink } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 import {
@@ -28,8 +28,13 @@ import {
 } from "@/components/ui/chart";
 import { BarChartRequest } from "@/components/Dashboard/Healthcare/Cart/BarCart";
 import HealthBlog from "@/components/Dashboard/Healthcare/Blog/HealthBlog";
-import { getDateDifference } from "@/lib/utils";
-const chartData = [
+import { getCurrentDate, getDateDifference } from "@/lib/utils";
+import {
+  getNutritionSummary,
+  getRequestsByHealthCare,
+  getRequestSummary,
+} from "@/lib/API/Puskesmas/puskesmasApi";
+const chartDataDummy = [
   { month: "January", normal: 186, risk: 80, fat: 11 },
   { month: "February", normal: 237, risk: 120, fat: 33 },
   { month: "Maret", normal: 73, risk: 190, fat: 20 },
@@ -64,22 +69,135 @@ const HomeHealthCare = () => {
       title: "Tindakan",
       content: "200",
     },
-    {
-      icon: <FaBriefcaseMedical />,
-      hexColor: "#66CF9C",
-      title: "Tindakan",
-      content: "200",
-    },
-    {
-      icon: <FaBriefcaseMedical />,
-      hexColor: "#66CF9C",
-      title: "Tindakan",
-      content: "200",
-    },
+    // {
+    //   icon: <FaBriefcaseMedical />,
+    //   hexColor: "#66CF9C",
+    //   title: "Tindakan",
+    //   content: "200",
+    // },
+    // {
+    //   icon: <FaBriefcaseMedical />,
+    //   hexColor: "#66CF9C",
+    //   title: "Tindakan",
+    //   content: "200",
+    // },
   ];
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState({
+    status: "PENDING",
+    startDate: "",
+    endDate: "",
+    sortedByDate: "desc",
+  });
+
+  const [requests, setRequests] = useState([]);
+  const [requestPastSevenDays, setRequestPastSevenDays] = useState([]);
+  const [requestPastSevenDaysSummary, setRequestPastSevenDaysSummary] =
+    useState([]);
+
+  const [nutritionSummary, setNutritionSummary] = useState([]);
+  const [chartData, setChartData] = useState(chartDataDummy);
+  const [requestSummary, setRequestSummary] = useState([]);
+
+  useEffect(() => {
+    const fetchRequestIntervention = async (
+      setState,
+      callback = () => null,
+      isSlice = true
+    ) => {
+      callback();
+
+      const response = await getRequestsByHealthCare({ ...filters });
+      if (!response && !response.data) {
+        return;
+      }
+      if (isSlice) {
+        const slicedData = response.data.slice(0, 3);
+        setState(slicedData);
+        return;
+      }
+      setState(response.data);
+    };
+
+    const getPast7Days = () => {
+      const date = new Date();
+      date.setDate(date.getDate() - 7);
+      return date.toISOString().split("T")[0];
+    };
+
+    const fetchNutritionSummary = async () => {
+      const response = await getNutritionSummary();
+      const groupByMonth = Object.groupBy(response.data, ({ bulan }) => bulan);
+
+      const chartData = Object.entries(groupByMonth).map(([month, values]) => {
+        const returnedData = { month, normal: 0, risk: 0, fat: 0 };
+
+        values.forEach((value) => {
+          if (value.status_id === 3) {
+            returnedData.normal += 1;
+          } else if (value.status_id === 4) {
+            returnedData.risk += 1;
+          } else if (value.status_id === 5) {
+            returnedData.fat += 1;
+          }
+        });
+        return returnedData;
+      });
+      setChartData(chartData);
+    };
+
+    const fetchRequestSummary = async () => {
+      const response = await getRequestSummary();
+      console.log({ response });
+      const mapSummary = Object.entries(response.data).map(([key, values]) => {
+        /**
+       * {
+      icon: <FaBriefcaseMedical />,
+      hexColor: "#66CF9C",
+      title: "Permintaan",
+      content: "200",
+    }
+       */
+
+        return {
+          icon: <FaBriefcaseMedical />,
+          hexColor: "#66CF9C",
+          content: values,
+          title: key,
+        };
+      });
+      setRequestSummary(mapSummary);
+    };
+
+    fetchRequestIntervention(setRequests);
+    fetchRequestIntervention(setRequestPastSevenDays, () => {
+      setFilters((prevValue) => ({
+        ...prevValue,
+        startDate: getPast7Days(),
+      }));
+    });
+    fetchNutritionSummary();
+    fetchRequestSummary();
+  }, []);
+
+  console.log({ requestSummary });
+  useEffect(() => {
+    if (requestPastSevenDays.length > 0) {
+      const groupBy = Object.groupBy(requestPastSevenDays, ({ created_at }) =>
+        new Date(created_at).getDate()
+      );
+      const countPerDate = Object.entries(groupBy).map(([date, items]) => ({
+        date,
+        request: items.length,
+      }));
+      setRequestPastSevenDaysSummary(countPerDate);
+    }
+  }, [requestPastSevenDays]);
+
+  console.log({ chartData });
+
   return (
     <article className="flex flex-col gap-4">
-      <HealthCareCardList healthCareCards={healthCareCards} />
       <div className="grid grid-cols-5 gap-4">
         <section className="col-span-3 flex flex-col gap-4">
           <div className="bg-white p-4 rounded-lg col-span-2">
@@ -103,7 +221,24 @@ const HomeHealthCare = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
+                {requests.length > 0 ? (
+                  requests.map((request) => (
+                    <TableRow key={request.id}>
+                      <TableCell className="font-medium">
+                        {request.user.teacher.institution.name}
+                      </TableCell>
+                      <TableCell>{request.family_member.full_name}</TableCell>
+                      <TableCell>{request.status}</TableCell>
+                      <TableCell className="text-right">
+                        {getDateDifference(request.created_at)}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <p>Tidak ada data</p>
+                )}
+
+                {/* <TableRow>
                   <TableCell className="font-medium">SD Cibiru Hilir</TableCell>
                   <TableCell>Ripan Renaldi</TableCell>
                   <TableCell>Pending</TableCell>
@@ -118,20 +253,17 @@ const HomeHealthCare = () => {
                   <TableCell className="text-right">
                     {getDateDifference("2025/05/09")}
                   </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium">SD Cibiru Hilir</TableCell>
-                  <TableCell>Ripan Renaldi</TableCell>
-                  <TableCell>Pending</TableCell>
-                  <TableCell className="text-right">
-                    {getDateDifference("2025/05/09")}
-                  </TableCell>
-                </TableRow>
+                </TableRow> */}
               </TableBody>
             </Table>
           </div>
+          <HealthCareCardList healthCareCards={requestSummary} />
+
           <div>
-            <BarChartRequest title="Permintaan 7 hari sebelumnya" />
+            <BarChartRequest
+              title="Permintaan 7 hari sebelumnya"
+              data={requestPastSevenDaysSummary}
+            />
           </div>
         </section>
 

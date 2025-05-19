@@ -4,8 +4,8 @@ import BlogCard from "./BlogCard";
 const BlogList = ({ blogs }) => {
   return (
     <>
-      {blogs.map((blog) => (
-        <BlogCard {...blog} />
+      {blogs.map((blog, i) => (
+        <BlogCard {...blog} key={i} />
       ))}
     </>
   );

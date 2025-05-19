@@ -9,7 +9,7 @@ export const HealthCareCard = ({
 }) => {
   return (
     <section
-      className={`flex gap-2 p-3 items-center bg-white text-sm lg:w-48 shadow-md rounded-lg ${customClass}`}
+      className={`flex gap-2 p-3 items-center bg-white text-sm shadow-md rounded-lg ${customClass}`}
     >
       <div className={`text-[${hexColor}] text-3xl `}>{icon}</div>
       <div>

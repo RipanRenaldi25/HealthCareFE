@@ -94,11 +94,21 @@ export const getDate = (date) => {
   return dateFormat.format(new Date(date));
 };
 
+// export const getCurrentDate = () => {
+//   const dateFormat = Intl.DateTimeFormat("id-ID", {
+//     day: "2-digit",
+//     year: "numeric",
+//     month: "2-digit",
+//   });
+//   const currentDate = new Date();
+//   const formatedDate = dateFormat.format(currentDate);
+//   return formatedDate.split("/").reverse().join("/").toString();
+// };
+
 export const getCurrentDate = () => {
-  const dateFormat = Intl.DateTimeFormat("id-ID", {
-    day: "2-digit",
-    year: "numeric",
-    month: "2-digit",
-  });
-  return dateFormat.format(new Date());
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 };
